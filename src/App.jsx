@@ -8,6 +8,14 @@ function App() {
   const maxLetters = 5;
   const [guess, setGuess] = useState("");
   const [mainArr, setMainArr] = useState(() => Array(6).fill().map(() => Array(5).fill(0)));
+  const [guessCount, setGuessCount] = useState(0);
+  const inputElement = document.getElementById("input-element");
+
+  /*inputElement.addEventListener('keydown', (event) => {
+    if (event.key == 'Enter') {
+
+    }
+  });*/
 
   return (
     <div className="App">
@@ -16,7 +24,7 @@ function App() {
           {mainArr.map((row, rowIndex) => (
             <tr key={rowIndex}>
               {row.map((cell, cellIndex) => (
-                <td class="let-box" key={cellIndex}>{cell}</td>
+                rowIndex == guessCount ? <td class="let-box"><input class="input-box" id="input-element" maxlength="1" type="text"></input></td> : <td class="let-box" key={cellIndex}>{cell}</td>
               ))}
             </tr>
           ))}
@@ -26,16 +34,16 @@ function App() {
         <table class="key-table">
           <tbody>
             <tr class="key-row1">
-              <td class="key-box">Q</td>
-              <td class="key-box">W</td>
-              <td class="key-box">E</td>
-              <td class="key-box">R</td>
-              <td class="key-box">T</td>
-              <td class="key-box">Y</td>
-              <td class="key-box">U</td>
-              <td class="key-box">I</td>
-              <td class="key-box">O</td>
-              <td class="key-box">P</td>
+              <td class="key-box" id="q">Q</td>
+              <td class="key-box" id="w">W</td>
+              <td class="key-box" id="e">E</td>
+              <td class="key-box" id="r">R</td>
+              <td class="key-box" id="t">T</td>
+              <td class="key-box" id="y">Y</td>
+              <td class="key-box" id="u">U</td>
+              <td class="key-box" id="i">I</td>
+              <td class="key-box" id="o">O</td>
+              <td class="key-box" id="p">P</td>
             </tr>
           </tbody>
         </table>
@@ -43,15 +51,15 @@ function App() {
           <tbody>
             <tr class="key-row2">
               <td class="key-box" style={{ visibility: 'hidden' }}></td>
-              <td class="key-box">A</td>
-              <td class="key-box">S</td>
-              <td class="key-box">D</td>
-              <td class="key-box">F</td>
-              <td class="key-box">G</td>
-              <td class="key-box">H</td>
-              <td class="key-box">J</td>
-              <td class="key-box">K</td>
-              <td class="key-box">L</td>
+              <td class="key-box" id="a">A</td>
+              <td class="key-box" id="s">S</td>
+              <td class="key-box" id="d">D</td>
+              <td class="key-box" id="f">F</td>
+              <td class="key-box" id="g">G</td>
+              <td class="key-box" id="h">H</td>
+              <td class="key-box" id="j">J</td>
+              <td class="key-box" id="k">K</td>
+              <td class="key-box" id="l">L</td>
               <td class="key-box" style={{ visibility: 'hidden' }}></td>
             </tr>
           </tbody>
@@ -61,13 +69,13 @@ function App() {
             <tr class="key-row3">
               <td class="key-box" style={{ visibility: 'hidden' }}></td>
               <td class="key-box" style={{ visibility: 'hidden' }}></td>
-              <td class="key-box">Z</td>
-              <td class="key-box">X</td>
-              <td class="key-box">C</td>
-              <td class="key-box">V</td>
-              <td class="key-box">B</td>
-              <td class="key-box">N</td>
-              <td class="key-box">M</td>
+              <td class="key-box" id="z">Z</td>
+              <td class="key-box" id="x">X</td>
+              <td class="key-box" id="c">C</td>
+              <td class="key-box" id="v">V</td>
+              <td class="key-box" id="b">B</td>
+              <td class="key-box" id="n">N</td>
+              <td class="key-box" id="m">M</td>
               <td class="key-box" style={{ visibility: 'hidden' }}></td>
               <td class="key-box" style={{ visibility: 'hidden' }}></td>
             </tr>
