@@ -46,3 +46,18 @@
   text-align: center;
   border: none;
 }
+
+.start-btn {
+  border: 2ps solid black;
+  border-radius: 5px;
+  background-color: #c4efff;
+  width: 5em;
+  height: 2em;
+  font-size: 0.9em;
+  margin: 0;
+}
+
+.start-btn:hover {
+  cursor: pointer;
+  background-color: #def6ff;
+}

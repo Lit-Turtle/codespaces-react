@@ -1,30 +1,76 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './App.css';
 
 function App() {
   //Delcaring properties
-  const wordArray = [];
-  const maxLetters = 5;
+  const [wordle, setWordle] = useState("");
   const [guess, setGuess] = useState("");
-  const [mainArr, setMainArr] = useState(() => Array(6).fill().map(() => Array(5).fill(0)));
+  const [mainArr, setMainArr] = useState(() => Array(6).fill().map(() => Array(5).fill("")));
   const [guessCount, setGuessCount] = useState(0);
-  const inputElement = document.getElementById("input-element");
+  const [firstEmpty, setFirstEmpty] = useState(0);
+  const [playing, setPlaying] = useState(false);
 
-  /*inputElement.addEventListener('keydown', (event) => {
-    if (event.key == 'Enter') {
+  //Starting Game
+  const gameStart = () => {
+    console.log("Game Started");
+    setPlaying(true);
+    //Fetch a random 5 letter word from the API
+    fetch('https://random-word-api.herokuapp.com/word?length=5&number=1')
+      .then(response => response.json())
+      .then(data => {
+        setWordle(data[0].toUpperCase());
+      })
+      .catch(error => console.error('Error fetching word:', error));
+  }
 
-    }
-  });*/
+  useEffect(() => {
+    setWordle(wordle);
+  }, [wordle]);
+  
+  //Enter key event
+    useEffect(() => {
+    const handleEnter = (e) => {
+      if (e.key === 'Enter') {
+        console.log('Enter key pressed (global)');
+        setGuess(mainArr[guessCount].join(''));
+      }
+    };
+    window.addEventListener('keydown', handleEnter);
+    return () => {
+      window.removeEventListener('keydown', handleEnter);
+    };
+    }, []);
+
+  useEffect(() => {
+    console.log("guess is", guess);
+    checkGuess();
+  }, [guess]);
+
+  const checkGuess = () => {
+    
+  }
+
+  //Handle input changes
+  const handleChange = (cellIndex, e) => {
+    let temp = [...mainArr];
+    temp[guessCount][cellIndex] = e.toUpperCase();
+    setMainArr(temp);
+    console.log(mainArr[guessCount]);
+  }
 
   return (
     <div className="App">
+      <button class="start-btn" onClick={() => gameStart()}>{playing ? "Restart" : "Start"}</button>
+      <p>{wordle}</p>
       <table class="let-table">
         <tbody>
           {mainArr.map((row, rowIndex) => (
             <tr key={rowIndex}>
               {row.map((cell, cellIndex) => (
-                rowIndex == guessCount ? <td class="let-box"><input class="input-box" id="input-element" maxlength="1" type="text"></input></td> : <td class="let-box" key={cellIndex}>{cell}</td>
+                rowIndex === guessCount
+                  ? <td class="let-box" key={cellIndex}><input class="input-box" id="input-{cellIndex}" onChange={(e) => handleChange(cellIndex, e.target.value)} maxLength="1" type="text" /></td>
+                  : <td class="let-box" key={cellIndex}>{cell}</td>
               ))}
             </tr>
           ))}
