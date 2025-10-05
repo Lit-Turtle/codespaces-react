@@ -15,6 +15,7 @@ function App() {
   const gameStart = () => {
     console.log("Game Started");
     setPlaying(true);
+    setGuessCount(0);
     //Fetch a random 5 letter word from the API
     fetch('https://random-word-api.herokuapp.com/word?length=5&number=1')
       .then(response => response.json())
@@ -33,7 +34,9 @@ function App() {
     const handleEnter = (e) => {
       if (e.key === 'Enter') {
         console.log('Enter key pressed (global)');
-        setGuess(mainArr[guessCount].join(''));
+        if (!mainArr[guessCount].includes("")) {
+          setGuess(mainArr[guessCount].join(''));
+        }
       }
     };
     window.addEventListener('keydown', handleEnter);
@@ -48,7 +51,17 @@ function App() {
   }, [guess]);
 
   const checkGuess = () => {
-    
+    if(guess === wordle) {
+      console.log("You Win!");
+      setPlaying(false);
+      setGuessCount(999);
+    } else {
+      if(guessCount < 5) {
+        setGuessCount(guessCount + 1);
+      } else {
+        console.log("You Lose! The word was " + wordle);
+      }
+    }
   }
 
   //Handle input changes
@@ -69,8 +82,8 @@ function App() {
             <tr key={rowIndex}>
               {row.map((cell, cellIndex) => (
                 rowIndex === guessCount
-                  ? <td class="let-box" key={cellIndex}><input class="input-box" id="input-{cellIndex}" onChange={(e) => handleChange(cellIndex, e.target.value)} maxLength="1" type="text" /></td>
-                  : <td class="let-box" key={cellIndex}>{cell}</td>
+                  ? <td class="let-box" key={cellIndex}><input class="input-box row{rowIndex}" id="input-{cellIndex}" onChange={(e) => handleChange(cellIndex, e.target.value)} maxLength="1" type="text" /></td>
+                  :   <td class="let-box" key={cellIndex}>{cell}</td>
               ))}
             </tr>
           ))}
