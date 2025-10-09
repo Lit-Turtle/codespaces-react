@@ -56,10 +56,16 @@ function App() {
       console.log("You Win!");
       setPlaying(false);
       setGuessCount(999);
+      for(let correctChar of guess) {
+        let correct = document.getElementById(correctChar.toLowerCase());
+        correct.style.backgroundColor = "#9effa9"
+        correct.style.border = "2px solid #9effa9"
+      }
     } else {
+      let guessArr = [...guess];
+      let wordleArr = [...wordle];
       if(guessCount < 5) {
-        let guessArr = [...guess];
-        let wordleArr = [...wordle];
+        setGuessCount(guessCount + 1);
         console.log(guessArr);
         console.log(wordleArr);
         for(let char = 0; char < guessArr.length; char++) {
@@ -80,11 +86,29 @@ function App() {
             wrong.style.border = "2px solid red"
           }
         }
-        setGuessCount(guessCount + 1);
       } else {
         console.log("You Lose! The word was " + wordle);
+        for(let char = 0; char < guessArr.length; char++) {
+          if(wordleArr.includes(guessArr[char]) && guessArr[char] === wordleArr[char]) {
+            console.log(guessArr[char] + " is in the word and right place");
+            let correct = document.getElementById(guessArr[char].toLowerCase());
+            correct.style.backgroundColor = "#9effa9"
+            correct.style.border = "2px solid #9effa9"
+          } else if(wordleArr.includes(guessArr[char])) {
+            console.log(guessArr[char] + " is in the word but wrong place");
+            let close = document.getElementById(guessArr[char].toLowerCase());
+            close.style.backgroundColor = "yellow"
+            close.style.border = "2px solid yellow"
+          } else {
+            console.log(guessArr[char] + " is not in the word");
+            let wrong = document.getElementById(guessArr[char].toLowerCase());
+            wrong.style.backgroundColor = "red"
+            wrong.style.border = "2px solid red"
+          }
+        }
       }
     }
+    //grabs the correlating letter box from the keyboard and then goes to same color as that
   }
 
   //Handle input changes
@@ -108,7 +132,7 @@ function App() {
               {row.map((cell, cellIndex) => (
                 rowIndex === guessCount
                   ? <td class="let-box" key={cellIndex}><input class="input-box row{rowIndex}" id="input-{cellIndex}" onChange={(e) => handleChange(cellIndex, e.target.value)} maxLength="1" type="text" /></td>
-                  :   <td class="let-box" key={cellIndex}>{cell}</td>
+                  :   <td class="let-box" id={cellIndex} key={cellIndex}>{cell}</td>
               ))}
             </tr>
           ))}
