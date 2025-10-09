@@ -52,6 +52,8 @@ function App() {
   }, [guess]);
 
   const checkGuess = () => {
+    let guessArr = [...guess];
+    let wordleArr = [...wordle];
     if(guess === wordle) {
       console.log("You Win!");
       setPlaying(false);
@@ -62,8 +64,6 @@ function App() {
         correct.style.border = "2px solid #9effa9"
       }
     } else {
-      let guessArr = [...guess];
-      let wordleArr = [...wordle];
       if(guessCount < 5) {
         setGuessCount(guessCount + 1);
         console.log(guessArr);
@@ -109,6 +109,7 @@ function App() {
       }
     }
     //grabs the correlating letter box from the keyboard and then goes to same color as that
+    
   }
 
   //Handle input changes
