@@ -34,8 +34,9 @@ function App() {
     const handleEnter = (e) => {
       if (e.key === 'Enter') {
         console.log('Enter key pressed (global)');
-        if (!mainArr[guessCount].includes("")) {
-          setGuess(mainArr[guessCount].join(''));
+        const row = mainArr[guessCount];
+        if (row && !row.includes("")) {
+          setGuess(row.join('').toUpperCase());
         }
       }
     };
@@ -43,7 +44,7 @@ function App() {
     return () => {
       window.removeEventListener('keydown', handleEnter);
     };
-    }, []);
+    }, [mainArr, guessCount]);
 
   useEffect(() => {
     console.log("guess is", guess);
@@ -57,6 +58,28 @@ function App() {
       setGuessCount(999);
     } else {
       if(guessCount < 5) {
+        let guessArr = [...guess];
+        let wordleArr = [...wordle];
+        console.log(guessArr);
+        console.log(wordleArr);
+        for(let char = 0; char < guessArr.length; char++) {
+          if(wordleArr.includes(guessArr[char]) && guessArr[char] === wordleArr[char]) {
+            console.log(guessArr[char] + " is in the word and right place");
+            let correct = document.getElementById(guessArr[char].toLowerCase());
+            correct.style.backgroundColor = "#9effa9"
+            correct.style.border = "2px solid #9effa9"
+          } else if(wordleArr.includes(guessArr[char])) {
+            console.log(guessArr[char] + " is in the word but wrong place");
+            let close = document.getElementById(guessArr[char].toLowerCase());
+            close.style.backgroundColor = "yellow"
+            close.style.border = "2px solid yellow"
+          } else {
+            console.log(guessArr[char] + " is not in the word");
+            let wrong = document.getElementById(guessArr[char].toLowerCase());
+            wrong.style.backgroundColor = "red"
+            wrong.style.border = "2px solid red"
+          }
+        }
         setGuessCount(guessCount + 1);
       } else {
         console.log("You Lose! The word was " + wordle);
@@ -66,10 +89,12 @@ function App() {
 
   //Handle input changes
   const handleChange = (cellIndex, e) => {
-    let temp = [...mainArr];
-    temp[guessCount][cellIndex] = e.toUpperCase();
+    const temp = [...mainArr];
+    const rowCopy = [...temp[guessCount]];
+    rowCopy[cellIndex] = e.toUpperCase();
+    temp[guessCount] = rowCopy;
     setMainArr(temp);
-    console.log(mainArr[guessCount]);
+    console.log('updated row (pending state):', rowCopy);
   }
 
   return (
