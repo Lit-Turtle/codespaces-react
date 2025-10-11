@@ -1,4 +1,6 @@
-
+/* Make win loss counter
+Implemnt box moving to next input. Use useEffect for each cell(gotta figure out how to set foucs tho)
+*/ 
 import React, { useState, useRef, useEffect } from 'react';
 import './App.css';
 
@@ -16,6 +18,24 @@ function App() {
     console.log("Game Started");
     setPlaying(true);
     setGuessCount(0);
+    // reset colors for all letter boxes and keyboard keys
+    let table = document.getElementsByClassName("let-box");
+    for (let i = 0; i < table.length; i++) {
+      table[i].style.backgroundColor = "";
+      table[i].style.border = "";
+    }
+    setMainArr(Array(6).fill().map(() => Array(5).fill("")));
+    setGuess("");
+    
+    const keys = 'qwertyuiopasdfghjklzxcvbnm'.split('');
+    keys.forEach(k => {
+      const el = document.getElementById(k);
+      if (el) {
+        el.style.backgroundColor = '';
+        el.style.border = '';
+      }
+    });
+    
     //Fetch a random 5 letter word from the API
     fetch('https://random-word-api.herokuapp.com/word?length=5&number=1')
       .then(response => response.json())
@@ -65,26 +85,33 @@ function App() {
       }
     } else {
       if(guessCount < 5) {
-        setGuessCount(guessCount + 1);
         console.log(guessArr);
-        console.log(wordleArr);
+        console.log(wordleArr);       
         for(let char = 0; char < guessArr.length; char++) {
+          let letterBox = document.getElementById(`${guessCount}-${char}`); 
           if(wordleArr.includes(guessArr[char]) && guessArr[char] === wordleArr[char]) {
             console.log(guessArr[char] + " is in the word and right place");
             let correct = document.getElementById(guessArr[char].toLowerCase());
             correct.style.backgroundColor = "#9effa9"
             correct.style.border = "2px solid #9effa9"
+            letterBox.style.backgroundColor = "#9effa9"
+            letterBox.style.border = "2px solid black"
           } else if(wordleArr.includes(guessArr[char])) {
             console.log(guessArr[char] + " is in the word but wrong place");
             let close = document.getElementById(guessArr[char].toLowerCase());
             close.style.backgroundColor = "yellow"
             close.style.border = "2px solid yellow"
+            letterBox.style.backgroundColor = "yellow"
+            letterBox.style.border = "2px solid black"
           } else {
             console.log(guessArr[char] + " is not in the word");
             let wrong = document.getElementById(guessArr[char].toLowerCase());
             wrong.style.backgroundColor = "red"
             wrong.style.border = "2px solid red"
+            letterBox.style.backgroundColor = "red"
+            letterBox.style.border = "2px solid black"
           }
+          setGuessCount(guessCount + 1);
         }
       } else {
         console.log("You Lose! The word was " + wordle);
@@ -106,10 +133,9 @@ function App() {
             wrong.style.border = "2px solid red"
           }
         }
+        setGuessCount(guessCount + 1);
       }
     }
-    //grabs the correlating letter box from the keyboard and then goes to same color as that
-    
   }
 
   //Handle input changes
@@ -132,8 +158,8 @@ function App() {
             <tr key={rowIndex}>
               {row.map((cell, cellIndex) => (
                 rowIndex === guessCount
-                  ? <td class="let-box" key={cellIndex}><input class="input-box row{rowIndex}" id="input-{cellIndex}" onChange={(e) => handleChange(cellIndex, e.target.value)} maxLength="1" type="text" /></td>
-                  :   <td class="let-box" id={cellIndex} key={cellIndex}>{cell}</td>
+                  ? <td class="let-box" id={`${rowIndex}-${cellIndex}`} key={cellIndex}><input class="input-box row{rowIndex}" id="input-{cellIndex}" onChange={(e) => handleChange(cellIndex, e.target.value)} maxLength="1" type="text" /></td>
+                  : <td class="let-box" id={cellIndex} key={cellIndex}>{cell}</td>
               ))}
             </tr>
           ))}
