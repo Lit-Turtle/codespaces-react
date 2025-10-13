@@ -10,7 +10,7 @@ function App() {
   const [guess, setGuess] = useState("");
   const [mainArr, setMainArr] = useState(() => Array(6).fill().map(() => Array(5).fill("")));
   const [guessCount, setGuessCount] = useState(0);
-  const [firstEmpty, setFirstEmpty] = useState(0);
+  const [lastSpot, setLastSpot] = useState(0);
   const [playing, setPlaying] = useState(false);
 
   //Starting Game
@@ -43,33 +43,45 @@ function App() {
         setWordle(data[0].toUpperCase());
       })
       .catch(error => console.error('Error fetching word:', error));
+    
   }
 
   useEffect(() => {
     setWordle(wordle);
   }, [wordle]);
   
-  //Enter key event
+    // Global key handler (Enter + Backspace)
     useEffect(() => {
-    const handleEnter = (e) => {
-      if (e.key === 'Enter') {
-        console.log('Enter key pressed (global)');
-        const row = mainArr[guessCount];
-        if (row && !row.includes("")) {
-          setGuess(row.join('').toUpperCase());
+      const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+          console.log('Enter key pressed (global)');
+          const row = mainArr[guessCount];
+          if (row && !row.includes('')) {
+            setGuess(row.join('').toUpperCase());
+          }
+        } else if (e.key === 'Backspace') {
+          console.log('Backspace key pressed (global)');
+          for (let i = 4; i >= 0; i--) {
+            if(mainArr[guessCount][i] !== "") {
+              setLastSpot(i);
+              break;
+            }
+          }
         }
-      }
-    };
-    window.addEventListener('keydown', handleEnter);
-    return () => {
-      window.removeEventListener('keydown', handleEnter);
-    };
+      };
+
+      window.addEventListener('keydown', handleKeyDown);
+      return () => window.removeEventListener('keydown', handleKeyDown);
     }, [mainArr, guessCount]);
 
   useEffect(() => {
     console.log("guess is", guess);
     checkGuess();
   }, [guess]);
+
+  useEffect(() => {
+    //focusNextInput(lastSpot, true);
+  }, [lastSpot]);
 
   const checkGuess = () => {
     let guessArr = [...guess];
@@ -148,6 +160,25 @@ function App() {
     console.log('updated row (pending state):', rowCopy);
   }
 
+  const focusNextInput = (cellIndex, back) => {
+    if(back) {
+      if(document.activeElement.value === "") {
+        document.getElementById(`input-${guessCount}-${cellIndex}`).focus();
+      }
+    } else {
+      if(document.getElementById(`input-${guessCount}-${cellIndex}`).value === "") {
+        if(cellIndex === 0) 
+          return;
+        document.getElementById(`input-${guessCount}-${cellIndex-1}`).focus();
+      } else {
+        if(cellIndex === 4) 
+          return;
+        document.getElementById(`input-${guessCount}-${cellIndex+1}`).focus();
+      }
+    }
+    
+  }
+
   return (
     <div className="App">
       <button class="start-btn" onClick={() => gameStart()}>{playing ? "Restart" : "Start"}</button>
@@ -158,7 +189,10 @@ function App() {
             <tr key={rowIndex}>
               {row.map((cell, cellIndex) => (
                 rowIndex === guessCount
-                  ? <td class="let-box" id={`${rowIndex}-${cellIndex}`} key={cellIndex}><input class="input-box row{rowIndex}" id="input-{cellIndex}" onChange={(e) => handleChange(cellIndex, e.target.value)} maxLength="1" type="text" /></td>
+                  ? <td class="let-box" id={`${rowIndex}-${cellIndex}`} key={cellIndex}><input class="input-box row{rowIndex}" id={`input-${rowIndex}-${cellIndex}`} onChange={(e) => {
+                    handleChange(cellIndex, e.target.value)
+                    focusNextInput(cellIndex, false)
+                  }} maxLength="1" type="text" /></td>
                   : <td class="let-box" id={cellIndex} key={cellIndex}>{cell}</td>
               ))}
             </tr>
