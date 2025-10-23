@@ -65,10 +65,22 @@
   font-weight: bold;
 }
 
-.win-text {
+#win-text {
   color: green;
 }
 
-.loss-text {
+#loss-text {
   color: red;
+}
+
+@keyframes text-pop {
+  0% {
+    font-size: 1.15em;
+  }
+  50% {
+    font-size: 1.5em;
+  }
+  100% {
+    font-size: 1.15em;
+  }
 }
