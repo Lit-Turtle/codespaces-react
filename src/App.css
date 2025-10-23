@@ -56,3 +56,17 @@
   cursor: pointer;
   background-color: #def6ff;
 }
+
+.record-box {
+  position: fixed;
+  top: 5%;
+  left: 10%
+}
+
+.win-text {
+  color: green;
+}
+
+.loss-text {
+  color: red;
+}

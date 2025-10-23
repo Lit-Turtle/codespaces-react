@@ -76,6 +76,7 @@ function App() {
     }, [mainArr, guessCount]);
 
   useEffect(() => {
+    if (!guess) return;
     console.log("guess is", guess);
     checkGuess();
   }, [guess]);
@@ -194,6 +195,7 @@ function App() {
     <div className="App">
       <button class="start-btn" onClick={() => gameStart()}>{playing ? "Restart" : "Start"}</button>
       <p>{wordle}</p>
+      <p class="record-box">Record: <span class="win-text">{winCount}</span>-<span class="loss-text">{lossCount}</span></p>
       <table class="let-table">
         <tbody>
           {mainArr.map((row, rowIndex) => (
