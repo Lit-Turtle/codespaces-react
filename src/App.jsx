@@ -1,5 +1,7 @@
-/* Make win loss counter
-*/ 
+/* Add animation to win and loss. Grows and then back to normal: create animation in css and apply for 1 iteration if win or loss on the span
+  Fix backspace to focus
+  Make when new guessCoutn auto focus on next row first input
+*/
 import React, { useState, useRef, useEffect } from 'react';
 import './App.css';
 
@@ -161,6 +163,10 @@ function App() {
       }
     }
   }
+
+  useEffect(() => {
+    document.getElementById(`input-${guessCount}-0`).focus();
+  }, [guessCount]);
 
   //Handle input changes
   const handleChange = (cellIndex, e) => {

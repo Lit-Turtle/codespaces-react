@@ -60,7 +60,9 @@
 .record-box {
   position: fixed;
   top: 5%;
-  left: 10%
+  left: 10%;
+  font-size: 1.15em;
+  font-weight: bold;
 }
 
 .win-text {
