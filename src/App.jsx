@@ -1,6 +1,5 @@
 /* Add animation to win and loss. Grows and then back to normal: create animation in css and apply for 1 iteration if win or loss on the span
   Fix backspace to focus
-  Make when new guessCoutn auto focus on next row first input
 */
 import React, { useState, useRef, useEffect } from 'react';
 import './App.css';
@@ -64,12 +63,15 @@ function App() {
           }
         } else if (e.key === 'Backspace') {
           console.log('Backspace key pressed (global)');
-          for (let i = 4; i >= 0; i--) {
-            if(mainArr[guessCount][i] !== "") {
+          setLastSpot(mainArr[guessCount].indexOf(""));
+          console.log(lastSpot);
+          /*for (let i = 0; i < 5; i++) {
+            if(mainArr[guessCount][i] == "") {
               setLastSpot(i);
+              console.log("last empty spot is" + lastSpot);
               break;
             }
-          }
+          }*/
         }
       };
 
@@ -165,6 +167,7 @@ function App() {
   }
 
   useEffect(() => {
+    if (!playing) return;
     document.getElementById(`input-${guessCount}-0`).focus();
   }, [guessCount]);
 
