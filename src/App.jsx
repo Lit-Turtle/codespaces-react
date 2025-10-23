@@ -1,5 +1,6 @@
 /* Add animation to win and loss. Grows and then back to normal: create animation in css and apply for 1 iteration if win or loss on the span
   Fix backspace to focus
+  When empty spot and try press enter. Auto focuses to first empty spot
 */
 import React, { useState, useRef, useEffect } from 'react';
 import './App.css';
