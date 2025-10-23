@@ -1,6 +1,5 @@
-/* Add animation to win and loss. Grows and then back to normal: create animation in css and apply for 1 iteration if win or loss on the span
+/* 
   Fix backspace to focus
-  When empty spot and try press enter. Auto focuses to first empty spot
 */
 import React, { useState, useRef, useEffect } from 'react';
 import './App.css';
@@ -10,7 +9,7 @@ function App() {
   const [wordle, setWordle] = useState("");
   const [guess, setGuess] = useState("");
   const [mainArr, setMainArr] = useState(() => Array(6).fill().map(() => Array(5).fill("")));
-  const [guessCount, setGuessCount] = useState(0);
+  const [guessCount, setGuessCount] = useState(999);
   const [lastSpot, setLastSpot] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [winCount, setWinCount] = useState(0);
@@ -61,21 +60,20 @@ function App() {
           const row = mainArr[guessCount];
           if (row && !row.includes('')) {
             setGuess(row.join('').toUpperCase());
-          }
+          } 
+
         } else if (e.key === 'Backspace') {
           console.log('Backspace key pressed (global)');
-          setLastSpot(mainArr[guessCount].indexOf(""));
-          console.log(lastSpot);
-          /*for (let i = 0; i < 5; i++) {
+          for (let i = 4; i >= 0; i--) {
             if(mainArr[guessCount][i] == "") {
               setLastSpot(i);
               console.log("last empty spot is" + lastSpot);
               break;
             }
-          }*/
+          }
         }
       };
-
+      
       window.addEventListener('keydown', handleKeyDown);
       return () => window.removeEventListener('keydown', handleKeyDown);
     }, [mainArr, guessCount]);
@@ -85,6 +83,7 @@ function App() {
     console.log("guess is", guess);
     checkGuess();
   }, [guess]);
+
 
   useEffect(() => {
     focusNextInput(lastSpot, true);
@@ -96,6 +95,7 @@ function App() {
     if(guess === wordle) {
       console.log("You Win!");
       setWinCount(winCount + 1);
+      document.getElementById("win-text").style.animation = "text-pop 0.75s ease-in-out 1"
       setPlaying(false);
       setGuessCount(999);
       for(let correctChar of guess) {
@@ -160,6 +160,7 @@ function App() {
             letterBox.style.border = "2px solid black"
           }
           setLossCount(lossCount + 1);
+          document.getElementById("loss-text").style.animation = "text-pop 0.75s ease-in-out 1"
           setPlaying(false);
           setGuessCount(guessCount + 1);
         }
@@ -205,7 +206,7 @@ function App() {
     <div className="App">
       <button class="start-btn" onClick={() => gameStart()}>{playing ? "Restart" : "Start"}</button>
       <p>{wordle}</p>
-      <p class="record-box">Record: <span class="win-text">{winCount}</span>-<span class="loss-text">{lossCount}</span></p>
+      <p class="record-box">Record: <span id="win-text">{winCount}</span>-<span id="loss-text">{lossCount}</span></p>
       <table class="let-table">
         <tbody>
           {mainArr.map((row, rowIndex) => (
