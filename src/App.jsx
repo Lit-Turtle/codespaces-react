@@ -1,5 +1,4 @@
 /* Make win loss counter
-Implemnt box moving to next input. Use useEffect for each cell(gotta figure out how to set foucs tho)
 */ 
 import React, { useState, useRef, useEffect } from 'react';
 import './App.css';
@@ -12,6 +11,8 @@ function App() {
   const [guessCount, setGuessCount] = useState(0);
   const [lastSpot, setLastSpot] = useState(0);
   const [playing, setPlaying] = useState(false);
+  const [winCount, setWinCount] = useState(0);
+  const [lossCount, setLossCount] = useState(0);
 
   //Starting Game
   const gameStart = () => {
@@ -80,7 +81,7 @@ function App() {
   }, [guess]);
 
   useEffect(() => {
-    //focusNextInput(lastSpot, true);
+    focusNextInput(lastSpot, true);
   }, [lastSpot]);
 
   const checkGuess = () => {
@@ -88,6 +89,7 @@ function App() {
     let wordleArr = [...wordle];
     if(guess === wordle) {
       console.log("You Win!");
+      setWinCount(winCount + 1);
       setPlaying(false);
       setGuessCount(999);
       for(let correctChar of guess) {
@@ -128,24 +130,33 @@ function App() {
       } else {
         console.log("You Lose! The word was " + wordle);
         for(let char = 0; char < guessArr.length; char++) {
+          let letterBox = document.getElementById(`${guessCount}-${char}`); 
           if(wordleArr.includes(guessArr[char]) && guessArr[char] === wordleArr[char]) {
             console.log(guessArr[char] + " is in the word and right place");
             let correct = document.getElementById(guessArr[char].toLowerCase());
             correct.style.backgroundColor = "#9effa9"
             correct.style.border = "2px solid #9effa9"
+            letterBox.style.backgroundColor = "#9effa9"
+            letterBox.style.border = "2px solid black"
           } else if(wordleArr.includes(guessArr[char])) {
             console.log(guessArr[char] + " is in the word but wrong place");
             let close = document.getElementById(guessArr[char].toLowerCase());
             close.style.backgroundColor = "yellow"
             close.style.border = "2px solid yellow"
+            letterBox.style.backgroundColor = "yellow"
+            letterBox.style.border = "2px solid black"
           } else {
             console.log(guessArr[char] + " is not in the word");
             let wrong = document.getElementById(guessArr[char].toLowerCase());
             wrong.style.backgroundColor = "red"
             wrong.style.border = "2px solid red"
+            letterBox.style.backgroundColor = "red"
+            letterBox.style.border = "2px solid black"
           }
+          setLossCount(lossCount + 1);
+          setPlaying(false);
+          setGuessCount(guessCount + 1);
         }
-        setGuessCount(guessCount + 1);
       }
     }
   }
