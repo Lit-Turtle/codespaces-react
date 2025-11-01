@@ -222,7 +222,7 @@ function App() {
   }
 
   const showAnswer = () => {
-    if(playing) {
+    if(!playing) {
       return (<p>{wordle}</p>);
     }
   }
