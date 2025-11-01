@@ -1,6 +1,3 @@
-/* 
-  Fix backspace to focus
-*/
 import React, { useState, useRef, useEffect } from 'react';
 import './App.css';
 
@@ -64,13 +61,30 @@ function App() {
 
         } else if (e.key === 'Backspace') {
           console.log('Backspace key pressed (global)');
-          for (let i = 4; i >= 0; i--) {
-            if(mainArr[guessCount][i] == "") {
-              setLastSpot(i);
-              console.log("last empty spot is" + lastSpot);
-              break;
-            }
+          const active = document.activeElement;
+          if (!active || !active.id.startsWith('input-')) return;
+
+          const [_, rowIndex, cellIndex] = active.id.split('-');
+          const i = parseInt(cellIndex);
+          const r = parseInt(rowIndex);
+
+          if (r !== guessCount) return; // only affect current row
+
+          const currentInput = document.getElementById(`input-${r}-${i}`);
+
+          if (currentInput.value !== "") {
+            // Just clear current cell, keep focus here
+            currentInput.value = "";
+            handleChange(i, "");
+          } else if (i > 0) {
+            // Move back one cell if already empty
+            const prevInput = document.getElementById(`input-${r}-${i - 1}`);
+            prevInput.value = "";
+            handleChange(i - 1, "");
+            prevInput.focus();
           }
+
+          e.preventDefault();
         }
       };
       
@@ -78,12 +92,12 @@ function App() {
       return () => window.removeEventListener('keydown', handleKeyDown);
     }, [mainArr, guessCount]);
 
+  
   useEffect(() => {
     if (!guess) return;
     console.log("guess is", guess);
     checkGuess();
   }, [guess]);
-
 
   useEffect(() => {
     focusNextInput(lastSpot, true);
@@ -214,8 +228,8 @@ function App() {
               {row.map((cell, cellIndex) => (
                 rowIndex === guessCount
                   ? <td class="let-box" id={`${rowIndex}-${cellIndex}`} key={cellIndex}><input class="input-box row{rowIndex}" id={`input-${rowIndex}-${cellIndex}`} onChange={(e) => {
-                    handleChange(cellIndex, e.target.value)
-                    focusNextInput(cellIndex, false)
+                    handleChange(cellIndex, e.target.value.toUpperCase())
+                    if (e.target.value !== "") focusNextInput(cellIndex);
                   }} maxLength="1" type="text" /></td>
                   : <td class="let-box" id={cellIndex} key={cellIndex}>{cell}</td>
               ))}
