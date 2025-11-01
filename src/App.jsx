@@ -14,7 +14,7 @@ function App() {
 
   //Starting Game
   const gameStart = () => {
-    console.log("Game Started");
+    //console.log("Game Started");
     setPlaying(true);
     setGuessCount(0);
     // reset colors for all letter boxes and keyboard keys
@@ -53,14 +53,14 @@ function App() {
     useEffect(() => {
       const handleKeyDown = (e) => {
         if (e.key === 'Enter') {
-          console.log('Enter key pressed (global)');
+          //console.log('Enter key pressed (global)');
           const row = mainArr[guessCount];
           if (row && !row.includes('')) {
             setGuess(row.join('').toUpperCase());
           } 
 
         } else if (e.key === 'Backspace') {
-          console.log('Backspace key pressed (global)');
+          //console.log('Backspace key pressed (global)');
           const active = document.activeElement;
           if (!active || !active.id.startsWith('input-')) return;
 
@@ -95,7 +95,7 @@ function App() {
   
   useEffect(() => {
     if (!guess) return;
-    console.log("guess is", guess);
+    //console.log("guess is", guess);
     checkGuess();
   }, [guess]);
 
@@ -107,7 +107,7 @@ function App() {
     let guessArr = [...guess];
     let wordleArr = [...wordle];
     if(guess === wordle) {
-      console.log("You Win!");
+      //console.log("You Win!");
       setWinCount(winCount + 1);
       document.getElementById("win-text").style.animation = "text-pop 0.75s ease-in-out 1"
       setPlaying(false);
@@ -119,8 +119,8 @@ function App() {
       }
     } else {
       if(guessCount < 5) {
-        console.log(guessArr);
-        console.log(wordleArr);       
+        //console.log(guessArr);
+        //console.log(wordleArr);       
         for(let char = 0; char < guessArr.length; char++) {
           let letterBox = document.getElementById(`${guessCount}-${char}`); 
           if(wordleArr.includes(guessArr[char]) && guessArr[char] === wordleArr[char]) {
@@ -148,7 +148,7 @@ function App() {
           setGuessCount(guessCount + 1);
         }
       } else {
-        console.log("You Lose! The word was " + wordle);
+        //console.log("You Lose! The word was " + wordle);
         for(let char = 0; char < guessArr.length; char++) {
           let letterBox = document.getElementById(`${guessCount}-${char}`); 
           if(wordleArr.includes(guessArr[char]) && guessArr[char] === wordleArr[char]) {
@@ -194,7 +194,7 @@ function App() {
     rowCopy[cellIndex] = e.toUpperCase();
     temp[guessCount] = rowCopy;
     setMainArr(temp);
-    console.log('updated row (pending state):', rowCopy);
+    //console.log('updated row (pending state):', rowCopy);
   }
 
   const focusNextInput = (cellIndex, back) => {
@@ -216,10 +216,16 @@ function App() {
     
   }
 
+  const showAnswer = () => {
+    if(!playing) {
+      return (<p>{wordle}</p>);
+    }
+  }
+
   return (
     <div className="App">
       <button class="start-btn" onClick={() => gameStart()}>{playing ? "Restart" : "Start"}</button>
-      <p>{wordle}</p>
+      {showAnswer()}
       <p class="record-box">Record: <span id="win-text">{winCount}</span>-<span id="loss-text">{lossCount}</span></p>
       <table class="let-table">
         <tbody>
