@@ -117,6 +117,11 @@ function App() {
         correct.style.backgroundColor = "#9effa9"
         correct.style.border = "2px solid #9effa9"
       }
+      for(let char = 0; char < guessArr.length; char++) {
+        let letterBox = document.getElementById(`${guessCount}-${char}`); 
+        letterBox.style.backgroundColor = "#9effa9"
+        letterBox.style.border = "2px solid black" 
+        }
     } else {
       if(guessCount < 5) {
         //console.log(guessArr);
@@ -124,21 +129,21 @@ function App() {
         for(let char = 0; char < guessArr.length; char++) {
           let letterBox = document.getElementById(`${guessCount}-${char}`); 
           if(wordleArr.includes(guessArr[char]) && guessArr[char] === wordleArr[char]) {
-            console.log(guessArr[char] + " is in the word and right place");
+            //console.log(guessArr[char] + " is in the word and right place");
             let correct = document.getElementById(guessArr[char].toLowerCase());
             correct.style.backgroundColor = "#9effa9"
             correct.style.border = "2px solid #9effa9"
             letterBox.style.backgroundColor = "#9effa9"
             letterBox.style.border = "2px solid black"
           } else if(wordleArr.includes(guessArr[char])) {
-            console.log(guessArr[char] + " is in the word but wrong place");
+            //console.log(guessArr[char] + " is in the word but wrong place");
             let close = document.getElementById(guessArr[char].toLowerCase());
             close.style.backgroundColor = "yellow"
             close.style.border = "2px solid yellow"
             letterBox.style.backgroundColor = "yellow"
             letterBox.style.border = "2px solid black"
           } else {
-            console.log(guessArr[char] + " is not in the word");
+            //console.log(guessArr[char] + " is not in the word");
             let wrong = document.getElementById(guessArr[char].toLowerCase());
             wrong.style.backgroundColor = "red"
             wrong.style.border = "2px solid red"
@@ -152,21 +157,21 @@ function App() {
         for(let char = 0; char < guessArr.length; char++) {
           let letterBox = document.getElementById(`${guessCount}-${char}`); 
           if(wordleArr.includes(guessArr[char]) && guessArr[char] === wordleArr[char]) {
-            console.log(guessArr[char] + " is in the word and right place");
+            //console.log(guessArr[char] + " is in the word and right place");
             let correct = document.getElementById(guessArr[char].toLowerCase());
             correct.style.backgroundColor = "#9effa9"
             correct.style.border = "2px solid #9effa9"
             letterBox.style.backgroundColor = "#9effa9"
             letterBox.style.border = "2px solid black"
           } else if(wordleArr.includes(guessArr[char])) {
-            console.log(guessArr[char] + " is in the word but wrong place");
+            //console.log(guessArr[char] + " is in the word but wrong place");
             let close = document.getElementById(guessArr[char].toLowerCase());
             close.style.backgroundColor = "yellow"
             close.style.border = "2px solid yellow"
             letterBox.style.backgroundColor = "yellow"
             letterBox.style.border = "2px solid black"
           } else {
-            console.log(guessArr[char] + " is not in the word");
+            //console.log(guessArr[char] + " is not in the word");
             let wrong = document.getElementById(guessArr[char].toLowerCase());
             wrong.style.backgroundColor = "red"
             wrong.style.border = "2px solid red"
@@ -217,7 +222,7 @@ function App() {
   }
 
   const showAnswer = () => {
-    if(!playing) {
+    if(playing) {
       return (<p>{wordle}</p>);
     }
   }
